@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icon/favicon-16x16.png">
+    <link rel="manifest" href="icon/site.webmanifest">
+    <title>Vinho</title>
+</head>
+<body>
+    <h1>Buscar Vinho</h1>
+    <div class="search-section">
+        <input type="text" id="searchInput" placeholder="Digite o nome do vinho" oninput="searchWine()">
+        <input type="text" id="searchCoutry" placeholder="País" list="coutryList" oninput="searchWine()">
+        <datalist id="coutryList"></datalist>
+        <input type="text" id="searchRegion" placeholder="Região" oninput="searchWine()">
+        <input type="number" id="minPrice" placeholder="Preço Mínimo" oninput="searchWine()">
+        <input type="number" id="maxPrice" placeholder="Preço Máximo" oninput="searchWine()">
+        <button onclick="searchWine()">Buscar</button>
+        <button onclick="clearSearch()">Limpar</button>
+    </div>
+    <div id="resultsTable"></div>
+    <button onclick="exportToExcel()">Exportar para Excel</button>
+
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+</body>
+</html>
