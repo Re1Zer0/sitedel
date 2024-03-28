@@ -50,24 +50,25 @@ function clearSearch(){
 function exportToExcel(data) {
     const formattedData = data.map(wine => ({
         ...wine,
-        'PREÇO UNT': new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(wine['PREÇO UNT'])
+        'PREÇO UNT': new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(wine['PREÇO UNT']),
+        'PRÇ CX': new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(wine['PRÇ CX'])
     }));
     const ws = XLSX.utils.json_to_sheet(formattedData);
     ws['!cols'] = [
         { wch: 10 }, // COD
         { wch: 40 }, // DESCRIÇÃO
-        { wch: 15 }, // SAFRA
-        { wch: 10 },  // VOL
-        { wch: 10 }, //TP
-        { wch: 10 }, //CX
+        { wch: 5 }, // SAFRA
+        { wch: 5 },  // VOL
+        { wch: 5 }, //TP
+        { wch: 5 }, //CX
         { wch: 15 }, //PREÇO UNT
         { wch: 15 }, //PREÇO CX
         { wch: 20 }, //VINICOLA
-        { wch: 10 }, //TEOR
-        { wch: 20 }, //REGIAO
-        { wch: 15 }, //PAIS
+        { wch: 5 }, //TEOR
+        { wch: 10 }, //REGIAO
+        { wch: 10 }, //PAIS
         { wch: 10 }, //UVA
-        { wch: 10 }, //BLEND
+        { wch: 5 }, //BLEND
     ];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Resultados");
