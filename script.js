@@ -1,4 +1,5 @@
 let wines = [];
+let currentResults = [];
 
 fetch('siteteste1.json')
     .then(response => response.json())
@@ -23,6 +24,7 @@ fetch('siteteste1.json')
         return nameMatch && coutryMatch && regionMatch && priceMatch;
         })
         .sort((a, b) => a['PREÇO UNT'] - b['PREÇO UNT']);
+        currentResults = results;
     displayResults(results);
    }
 
@@ -45,8 +47,28 @@ function clearSearch(){
     document.getElementById('resultsTable').innerHTML = '';
 }   
 
-function exportToExcel() {
-    const ws = XLSX.utils.json_to_sheet(wines);
+function exportToExcel(data) {
+    const formattedData = data.map(wine => ({
+        ...wine,
+        'PREÇO UNT': new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(wine['PREÇO UNT'])
+    }));
+    const ws = XLSX.utils.json_to_sheet(formattedData);
+    ws['!cols'] = [
+        { wch: 10 }, // COD
+        { wch: 40 }, // DESCRIÇÃO
+        { wch: 15 }, // SAFRA
+        { wch: 10 },  // VOL
+        { wch: 10 }, //TP
+        { wch: 10 }, //CX
+        { wch: 15 }, //PREÇO UNT
+        { wch: 15 }, //PREÇO CX
+        { wch: 20 }, //VINICOLA
+        { wch: 10 }, //TEOR
+        { wch: 20 }, //REGIAO
+        { wch: 15 }, //PAIS
+        { wch: 10 }, //UVA
+        { wch: 10 }, //BLEND
+    ];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Resultados");
     XLSX.writeFile(wb, "resultados_vinho.xlsx");
