@@ -69,12 +69,18 @@ function clearSearch(){
 }   
 
 function exportToExcel() {
-    const formattedData = data.map(wine => ({
-        ...wine,
-        'PREÇO UNT': new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(wine['PREÇO UNT']),
-        'PRÇ CX': new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(wine['PRÇ CX'])
-    }));
-    const ws = XLSX.utils.json_to_sheet(formattedData);
+    const discount = parseFloat(document.getElementById('discount').value / 100) || 0;
+    const increase = parseFloat(document.getElementById('increase').value / 100) || 0;
+    const adjustedData = currentResults.map(wine => {
+        const adjustedUnitPrice = wine['PREÇO UNT'] * (1 - discount) * (1 + increase);
+        const adjustedBoxPrice = wine['PRÇ CX'] * (1 - discount) * (1 + increase);
+        return {
+            ...wine,
+            'PREÇO UNT': new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(adjustedUnitPrice),
+            'PRÇ CX': new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(adjustedBoxPrice)
+        };     
+    });
+    const ws = XLSX.utils.json_to_sheet(adjustedData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Resultados");
     XLSX.writeFile(wb, "resultados_vinho.xlsx");

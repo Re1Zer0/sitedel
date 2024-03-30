@@ -20,6 +20,7 @@ body {
 
 h1 {
     color: #5a5a5a;
+    text-align: center;
 }
 
 .search-section {
@@ -76,6 +77,7 @@ th {
         max-width: 100px;
     }
     h1 {
+        text-align: center;
         font-size: 18px;
     }
     
