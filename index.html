@@ -16,14 +16,11 @@
     <div class="search-section">
         <input type="text" id="searchInput" placeholder="Digite o nome do vinho" oninput="searchWine()">
         <input type="text" id="searchCountry" placeholder="País" list="countryList" oninput="searchWine()">
-        <datalist id="countryList">
-
-        </datalist>
+        <datalist id="countryList"></datalist>
         <input type="text" id="searchRegion" placeholder="Região" oninput="searchWine()">
         <input type="text" id="searchType" placeholder="Tipo" list="typeList" oninput="searchWine()">
-        <datalist id="typeList">
-
-        </datalist>
+        <datalist id="typeList"></datalist>
+        <input type="text" id="searchGrape" placeholder="Uva" oninput="searchWine()">
         <input type="number" id="minPrice" placeholder="Preço Mínimo" oninput="searchWine()">
         <input type="number" id="maxPrice" placeholder="Preço Máximo" oninput="searchWine()">
         <input type="number" id="discount" placeholder="Desconto (%)" min="0" max="100" step="1" oninput="searchWine()">

@@ -37,6 +37,7 @@ function searchWine() {
     const countryInput = document.getElementById('searchCountry').value.toLowerCase();
     const regionInput = document.getElementById('searchRegion').value.toLowerCase();
     const typeInput = document.getElementById('searchType').value.toLowerCase();
+    const grapeInput = document.getElementById('searchGrape').value.toLowerCase();
     const minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
     const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Number.MAX_SAFE_INTEGER;
     const results = wines.filter(wine => {
@@ -46,8 +47,9 @@ function searchWine() {
         const countryMatch = wine['PAIS'].toLowerCase().includes(countryInput);
         const regionMatch = wine['REGIAO'].toLowerCase().includes(regionInput);
         const typeMatch = wine['TP'].toLowerCase().includes(typeInput);
+        const grapeMatch = wine['UVA'].toLowerCase().includes(grapeInput);
         
-        return nameMatch && countryMatch && regionMatch && typeMatch && priceMatch;
+        return nameMatch && countryMatch && regionMatch && typeMatch && grapeMatch && priceMatch;
         })
         .sort((a, b) => a['PREÇO UNT'] - b['PREÇO UNT']);
     currentResults = results;
@@ -61,6 +63,7 @@ function clearSearch(){
     document.getElementById('searchCountry').value = '';
     document.getElementById('searchRegion').value = '';
     document.getElementById('searchType').value = '';
+    document.getElementById('searchGrape').value = '';
     document.getElementById('minPrice').value = '';
     document.getElementById('maxPrice').value = '';
     document.getElementById('discount').value = '';
@@ -96,7 +99,7 @@ function displayResults(results) {
     let header = table.createTHead();
     let row = header.insertRow(0);
 
-    let headers = ['Descrição', 'Tipo', 'Preço', 'País'];
+    let headers = ['Descrição', 'Tipo', 'UVA', 'Preço', 'País'];
     headers.forEach((text, index) => {
         let cell = row.insertCell(index);
         cell.innerHTML = `<b>${text}</b>`;
@@ -109,11 +112,12 @@ function displayResults(results) {
         let row = tbody.insertRow();
         row.insertCell(0).textContent = wine['DESCRIÇÃO'];
         row.insertCell(1).textContent = wine['TP'];
+        row.insertCell(2).textContent = wine['UVA'];
         const originalPrice = parseFloat(wine['PREÇO UNT']);
         const adjustedPrice = originalPrice * (1 - discount) * (1 + increase);
         let formatarPreco = new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(adjustedPrice);
-        row.insertCell(2).textContent = formatarPreco;
-        row.insertCell(3).textContent = wine['PAIS'];
+        row.insertCell(3).textContent = formatarPreco;
+        row.insertCell(4).textContent = wine['PAIS'];
         
     });
 resultsDiv.appendChild(table);
