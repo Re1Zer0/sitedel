@@ -7,15 +7,17 @@ body {
 }   
 
 .header {
-    background-color: #fff;
-    padding: 10px;
+    background-color: #a67c52;
+    color: white;
+    padding: 10px 15px;
     text-align: center;
 }
 
-.logo {
-    max-width: 150px;
+.header img {
+    max-width: 120px;
     height: auto;
-    margin-bottom: 10px;
+    display: block;
+    margin: 0 auto 10px;
 }
 
 h1 {
@@ -28,13 +30,14 @@ h1 {
     background-color: #fff;
     margin: 15px;
     border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }    
 
 input[type="text"],
 input[type="number"] {
     width: 100%;
     padding: 10px;
-    margin: 5px 0;
+    margin: 10px 0;
     border-radius: 5px;
     border: 1px solid #ccc;
     box-sizing: border-box;
@@ -45,7 +48,7 @@ button {
     width: 100%;
     padding: 10px;
     margin-top: 10px;
-    background-color: #007bff;
+    background-color: #8c6a41;
     color: white;
     border: none;
     border-radius: 5px;
@@ -53,32 +56,30 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
-}
-
-#resultsTable {
-    margin: 15px;
+    background-color: #754c29;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
 }
 th, td {
     text-align: left;
-    padding: 8pxpx;
+    padding: 12px;
     border-bottom: 1px solid #ddd;
 }
 th {
-    background-color: #f8f8f8;
+    background-color: #e8e8e8;
 }
-@media screen and (max-width: 600px) {
-    .logo{
-        max-width: 100px;
+@media (max-width: 600px) {
+    .header img {
+        width: 100px;
     }
-    h1 {
-        text-align: center;
-        font-size: 18px;
+    input[type="text"],
+    input[type="number"],
+    buttom {
+        width: 100%;
+        margin: 5px 0;
     }
-    
 }
