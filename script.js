@@ -5,77 +5,84 @@ fetch('siteteste1.json')
     .then(response => response.json())
     .then(data => {
         wines = data;
-        populateCoutryList();
+        populateCountryList();
+        populateTypeList();
         
     })
     .catch(error => console.error('Erro ao carregar os dados:', error));
 
-   function searchWine() {  
+   
+function populateCountryList() {
+    const countrySet = new Set(wines.map(wine => wine['PAIS']));
+    const countryList = document.getElementById('countryList');
+    countrySet.forEach(country => {
+        const option = document.createElement('option');
+        option.value = country;
+        countryList.appendChild(option);
+    });
+    }
+    
+function populateTypeList() {
+    const typeSet = new Set(wines.map(wine => wine['TP']));
+    const typeList = document.getElementById('typeList');
+    typeSet.forEach(type => { 
+        const option = document.createElement('option');
+        option.value = type;
+        typeList.appendChild(option);
+    });
+    }
+   
+function searchWine() {  
     const nameInput = document.getElementById('searchInput').value.toLowerCase();
-    const coutryInput = document.getElementById('searchCoutry').value.toLowerCase();
+    const countryInput = document.getElementById('searchCountry').value.toLowerCase();
     const regionInput = document.getElementById('searchRegion').value.toLowerCase();
-    const minPrice = document.getElementById('minPrice').value;
-    const maxPrice = document.getElementById('maxPrice').value;
+    const typeInput = document.getElementById('searchType').value.toLowerCase();
+    const minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
+    const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Number.MAX_SAFE_INTEGER;
     const results = wines.filter(wine => {
+        const unitPrice = parseFloat(wine['PREÇO UNT']);
+        const priceMatch = unitPrice >= minPrice && unitPrice <= maxPrice;
         const nameMatch = wine['DESCRIÇÃO'].toLowerCase().includes(nameInput);
-        const coutryMatch = wine['PAIS'].toLowerCase().includes(coutryInput);
+        const countryMatch = wine['PAIS'].toLowerCase().includes(countryInput);
         const regionMatch = wine['REGIAO'].toLowerCase().includes(regionInput);
-        const priceMatch = wine['PREÇO UNT'] >= (minPrice || 0) && wine['PREÇO UNT'] <= (maxPrice || Number.MAX_SAFE_INTEGER);
-        return nameMatch && coutryMatch && regionMatch && priceMatch;
+        const typeMatch = wine['TP'].toLowerCase().includes(typeInput);
+        
+        return nameMatch && countryMatch && regionMatch && typeMatch && priceMatch;
         })
         .sort((a, b) => a['PREÇO UNT'] - b['PREÇO UNT']);
-        currentResults = results;
+    currentResults = results;
     displayResults(results);
    }
 
-function populateCoutryList() {
-    const coutrySet = new Set(wines.map(wine => wine['PAIS']));
-    const coutryList = document.getElementById('coutryList');
-    coutrySet.forEach(coutry => {
-        const option = document.createElement('option');
-        option.value = coutry;
-        coutryList.appendChild(option);
-    });
-}
+
 
 function clearSearch(){
     document.getElementById('searchInput').value = '';
-    document.getElementById('searchCoutry').value = '';
+    document.getElementById('searchCountry').value = '';
     document.getElementById('searchRegion').value = '';
+    document.getElementById('searchType').value = '';
     document.getElementById('minPrice').value = '';
     document.getElementById('maxPrice').value = '';
+    document.getElementById('discount').value = '';
+    document.getElementById('increase').value = '';
     document.getElementById('resultsTable').innerHTML = '';
 }   
 
-function exportToExcel(data) {
+function exportToExcel() {
     const formattedData = data.map(wine => ({
         ...wine,
         'PREÇO UNT': new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(wine['PREÇO UNT']),
         'PRÇ CX': new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(wine['PRÇ CX'])
     }));
     const ws = XLSX.utils.json_to_sheet(formattedData);
-    ws['!cols'] = [
-        { wch: 10 }, // COD
-        { wch: 40 }, // DESCRIÇÃO
-        { wch: 5 }, // SAFRA
-        { wch: 5 },  // VOL
-        { wch: 5 }, //TP
-        { wch: 5 }, //CX
-        { wch: 15 }, //PREÇO UNT
-        { wch: 15 }, //PREÇO CX
-        { wch: 20 }, //VINICOLA
-        { wch: 5 }, //TEOR
-        { wch: 10 }, //REGIAO
-        { wch: 10 }, //PAIS
-        { wch: 10 }, //UVA
-        { wch: 5 }, //BLEND
-    ];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Resultados");
     XLSX.writeFile(wb, "resultados_vinho.xlsx");
 }
 
 function displayResults(results) {
+    const discount = parseFloat(document.getElementById('discount').value / 100) || 0;
+    const increase = parseFloat(document.getElementById('increase').value / 100) || 0;
     const resultsDiv = document.getElementById('resultsTable');
     resultsDiv.innerHTML = '';
 
@@ -96,9 +103,12 @@ function displayResults(results) {
         let row = tbody.insertRow();
         row.insertCell(0).textContent = wine['DESCRIÇÃO'];
         row.insertCell(1).textContent = wine['TP'];
-        let formatarPreco = new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(wine['PREÇO UNT']);
+        const originalPrice = parseFloat(wine['PREÇO UNT']);
+        const adjustedPrice = originalPrice * (1 - discount) * (1 + increase);
+        let formatarPreco = new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(adjustedPrice);
         row.insertCell(2).textContent = formatarPreco;
         row.insertCell(3).textContent = wine['PAIS'];
-        resultsDiv.appendChild(table);
+        
     });
+resultsDiv.appendChild(table);
 }
